@@ -1,9 +1,18 @@
 from pynput.keyboard import Controller as KeyboardController, Key, KeyCode
 from pynput.mouse import Controller as MouseController, Button
-from mouse import convert_to_pixel_coords
+from AppKit import NSScreen
+from utils import bytes_to_signed_int
+
+# Getting the main screen resolution using AppKit
+screen_width = NSScreen.mainScreen().frame().size.width
+screen_height = NSScreen.mainScreen().frame().size.height
 
 keyboard = KeyboardController()
 mouse = MouseController()
+
+def scale_coordinate(value, max_value):
+    # Scale from the range -32768 to 32767 to 0 to max_value
+    return (value + 32768) * max_value / 65535
 
 def decode_hid_event(data):
     event = {}
@@ -25,8 +34,8 @@ def decode_hid_event(data):
         # Mouse move event
         event['type'] = 'mouse_move'
         event['to'] = {
-            'x': (data[1] << 8) | data[2],
-            'y': (data[3] << 8) | data[4],
+            'x': bytes_to_signed_int(data[1], data[2]),
+            'y': bytes_to_signed_int(data[3], data[4]),
         }
 
     elif event_type_code == 4:
@@ -70,7 +79,8 @@ def replay_event(event):
             mouse.release(button)
 
     elif event['type'] == 'mouse_move':
-        pixel_x, pixel_y = convert_to_pixel_coords(event['to']['x'], event['to']['y'])
+        pixel_x = int(scale_coordinate(event['to']['x'], screen_width))
+        pixel_y = int(scale_coordinate(event['to']['y'], screen_height))
         print(pixel_x, pixel_y)
         mouse.position = (pixel_x, pixel_y)
 
