@@ -82,7 +82,7 @@ def get_pynput_key(key_code):
         "F10": Key.f10,
         "F11": Key.f11,
         "F12": Key.f12,
-        "PrintScreen": Key.print_screen,
+        # "PrintScreen": Key.print_screen,
         "ScrollLock": Key.scroll_lock,
         "Pause": Key.pause,
         "Insert": Key.insert,
@@ -132,6 +132,8 @@ def decode_hid_event(data):
     if event_type_code == 1:
         # Key event
         key = data[2:].decode('utf-8')
+        if key is None:
+            return
         print(key)
         event['type'] = 'key'
         event['state'] = data[1] == 1

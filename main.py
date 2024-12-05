@@ -12,7 +12,7 @@ RELAY_SERVER_APP_NAME = os.environ['RELAY_SERVER_APP_NAME']
 
 def on_message(ws, message):
     hid_event = decode_hid_event(message)
-    replay_event(hid_event)
+    # replay_event(hid_event)
 
 def on_error(ws, error):
     print(error)
