@@ -82,7 +82,7 @@ def replay_event(event):
     elif event['type'] == 'mouse_move':
         pixel_x = int(scale_coordinate(event['to']['x'], screen_width))
         pixel_y = int(scale_coordinate(event['to']['y'], screen_height))
-        # mouse.position = (pixel_x, pixel_y)
+        mouse.position = (pixel_x, pixel_y)
 
     elif event['type'] == 'mouse_relative':
         for delta in event['delta']:
