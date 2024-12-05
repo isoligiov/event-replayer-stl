@@ -1,5 +1,6 @@
 from pynput.keyboard import Controller as KeyboardController, Key, KeyCode
 from pynput.mouse import Controller as MouseController, Button
+from mouse import convert_to_pixel_coords
 
 keyboard = KeyboardController()
 mouse = MouseController()
@@ -69,7 +70,9 @@ def replay_event(event):
             mouse.release(button)
 
     elif event['type'] == 'mouse_move':
-        mouse.position = (event['to']['x'], event['to']['y'])
+        pixel_x, pixel_y = convert_to_pixel_coords(event['to']['x'], event['to']['y'])
+        print(pixel_x, pixel_y)
+        mouse.position = (pixel_x, pixel_y)
 
     elif event['type'] == 'mouse_relative':
         for delta in event['delta']:
