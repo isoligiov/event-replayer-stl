@@ -38,24 +38,24 @@ def decode_hid_event(data):
             'y': two_bytes_to_signed_int(data[3], data[4]),
         }
 
-    elif event_type_code == 4:
-        # Mouse relative event
-        event['type'] = 'mouse_relative'
-        event['squash'] = data[1] == 1
-        event['delta'] = []
-        for i in range(2, len(data), 2):
-            event['delta'].append({
-                'x': byte_to_signed_int(data[i]),
-                'y': byte_to_signed_int(data[i + 1]),
-            })
+    # elif event_type_code == 4:
+    #     # Mouse relative event
+    #     event['type'] = 'mouse_relative'
+    #     event['squash'] = data[1] == 1
+    #     event['delta'] = []
+    #     for i in range(2, len(data), 2):
+    #         event['delta'].append({
+    #             'x': byte_to_signed_int(data[i]),
+    #             'y': byte_to_signed_int(data[i + 1]),
+    #         })
 
     elif event_type_code == 5:
         # Mouse wheel event
         event['type'] = 'mouse_wheel'
         event['squash'] = data[1] == 1
         event['delta'] = {
-            'x': data[2],
-            'y': data[3],
+            'x': byte_to_signed_int(data[2]),
+            'y': byte_to_signed_int(data[3]),
         }
 
     else:
@@ -83,9 +83,9 @@ def replay_event(event):
         pixel_y = int(scale_coordinate(event['to']['y'], screen_height))
         mouse.position = (pixel_x, pixel_y)
 
-    elif event['type'] == 'mouse_relative':
-        for delta in event['delta']:
-            mouse.move(delta['x'], delta['y'])
+    # elif event['type'] == 'mouse_relative':
+    #     for delta in event['delta']:
+    #         mouse.move(delta['x'], delta['y'])
 
     elif event['type'] == 'mouse_wheel':
         # The actual library method is `scroll`; this might differ slightly
