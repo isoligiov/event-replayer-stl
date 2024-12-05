@@ -1,7 +1,7 @@
 from pynput.keyboard import Controller as KeyboardController, Key, KeyCode
 from pynput.mouse import Controller as MouseController, Button
 from AppKit import NSScreen
-from utils import bytes_to_signed_int
+from utils import two_bytes_to_signed_int, byte_to_signed_int
 
 # Getting the main screen resolution using AppKit
 screen_width = NSScreen.mainScreen().frame().size.width
@@ -34,8 +34,8 @@ def decode_hid_event(data):
         # Mouse move event
         event['type'] = 'mouse_move'
         event['to'] = {
-            'x': bytes_to_signed_int(data[1], data[2]),
-            'y': bytes_to_signed_int(data[3], data[4]),
+            'x': two_bytes_to_signed_int(data[1], data[2]),
+            'y': two_bytes_to_signed_int(data[3], data[4]),
         }
 
     elif event_type_code == 4:
@@ -45,8 +45,8 @@ def decode_hid_event(data):
         event['delta'] = []
         for i in range(2, len(data), 2):
             event['delta'].append({
-                'x': data[i],
-                'y': data[i + 1],
+                'x': byte_to_signed_int(data[i]),
+                'y': byte_to_signed_int(data[i + 1]),
             })
 
     elif event_type_code == 5:
@@ -72,7 +72,6 @@ def replay_event(event):
             keyboard.release(key)
 
     elif event['type'] == 'mouse_button':
-        pass
         button = Button.left if event['button'] == 'l' else Button.right  # Adjust as needed for button labels
         if event['state']:
             mouse.press(button)
