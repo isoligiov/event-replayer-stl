@@ -95,7 +95,7 @@ def get_pynput_key(key_code):
         "ArrowLeft": Key.left,
         "ArrowDown": Key.down,
         "ArrowUp": Key.up,
-        "NumLock": Key.num_lock,
+        # "NumLock": Key.num_lock,
         "NumpadDivide": KeyCode.from_char('/'),
         "NumpadMultiply": KeyCode.from_char('*'),
         "NumpadSubtract": KeyCode.from_char('-'),
