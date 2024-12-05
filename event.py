@@ -134,7 +134,6 @@ def decode_hid_event(data):
         key = data[2:].decode('utf-8')
         if key is None:
             return
-        print(key)
         event['type'] = 'key'
         event['state'] = data[1] == 1
         event['key'] = key
@@ -187,7 +186,14 @@ def replay_event(event):
             keyboard.release(key)
 
     elif event['type'] == 'mouse_button':
-        button = Button.left if event['button'] == 'l' else Button.right  # Adjust as needed for button labels
+        button = None
+        if event['button'] == 'l':
+            button = Button.left
+        elif event['button'] == 'r':
+            button = Button.right
+        else:
+            button = Button.middle
+        
         if event['state']:
             mouse.press(button)
         else:
