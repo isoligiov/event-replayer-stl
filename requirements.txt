@@ -1,0 +1,4 @@
+websocket-client
+rel
+pynput
+python-dotenv
