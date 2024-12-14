@@ -24,7 +24,7 @@ def on_open(ws):
 
 if __name__ == "__main__":
     websocket.enableTrace(False)
-    ws = websocket.WebSocketApp(f"ws://streamlineanalytics.net:10010",
+    ws = websocket.WebSocketApp(f"wss://streamlineanalytics.net:10010",
                               on_open=on_open,
                               on_message=on_message,
                               on_error=on_error,
