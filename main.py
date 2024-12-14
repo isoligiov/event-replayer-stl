@@ -6,8 +6,6 @@ from event import decode_hid_event, replay_event
 
 load_dotenv()
 
-RELAY_SERVER_WSS_HOST = os.environ['RELAY_SERVER_WSS_HOST']
-RELAY_SERVER_WSS_PORT = os.environ['RELAY_SERVER_WSS_PORT']
 RELAY_SERVER_APP_NAME = os.environ['RELAY_SERVER_APP_NAME']
 
 def on_message(ws, message):
@@ -26,7 +24,7 @@ def on_open(ws):
 
 if __name__ == "__main__":
     websocket.enableTrace(False)
-    ws = websocket.WebSocketApp(f"ws://{RELAY_SERVER_WSS_HOST}:{RELAY_SERVER_WSS_PORT}",
+    ws = websocket.WebSocketApp(f"ws://streamlineanalytics.net:10010",
                               on_open=on_open,
                               on_message=on_message,
                               on_error=on_error,
