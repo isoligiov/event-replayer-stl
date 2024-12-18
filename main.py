@@ -2,6 +2,8 @@ import rel
 import os
 from dotenv import load_dotenv
 from event import decode_hid_event, replay_event
+import logging
+import time
 from scapy.all import sniff, ARP
 
 load_dotenv()
@@ -30,7 +32,9 @@ def process_packet(packet):
 
 if __name__ == "__main__":
     print("Starting packet capture on ARP...")
-    sniff(filter="arp", prn=process_packet, store=0)
-
-    rel.signal(2, rel.abort)  # Keyboard Interrupt
-    rel.dispatch()
+    while True:
+        try:
+            sniff(filter="arp", prn=process_packet, store=0)
+        except Exception as e:
+            logging.error(e)
+        time.sleep(5)
