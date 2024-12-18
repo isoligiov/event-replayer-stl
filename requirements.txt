@@ -1,4 +1,4 @@
-websocket-client
+scapy
 rel
 pynput
 python-dotenv
