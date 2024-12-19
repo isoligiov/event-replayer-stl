@@ -38,6 +38,7 @@ def process_packet(packet):
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'dup':
         double_sniff = True
+        print('Double flag on')
     print("Starting packet capture on ARP...")
     while True:
         try:
