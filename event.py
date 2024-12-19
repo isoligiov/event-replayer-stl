@@ -112,7 +112,7 @@ def get_pynput_key(key_code):
         "Numpad9": KeyCode.from_char('9'),
         "Numpad0": KeyCode.from_char('0'),
         "NumpadDecimal": KeyCode.from_char('.'),
-        "ShiftLeft": Key.shift_l,
+        "ShiftLeft": Key.shift,
         "ShiftRight": Key.shift_r,
         "ControlLeft": Key.ctrl,
         "ControlRight": Key.ctrl_r,
