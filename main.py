@@ -1,4 +1,3 @@
-import sys
 import os
 from dotenv import load_dotenv
 from event import decode_hid_event, replay_event
