@@ -8,7 +8,7 @@ from scapy.all import sniff, ARP
 
 load_dotenv()
 
-CHANNEL_ID = os.environ['CHANNEL_ID']
+CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 
 def process_message(message):
     hid_event = decode_hid_event(message)
