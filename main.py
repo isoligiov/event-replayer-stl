@@ -10,7 +10,7 @@ load_dotenv()
 
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 double_sniff = False
-packet_index = 0
+last_event_id = None
 
 def process_message(message):
     hid_event = decode_hid_event(message)
@@ -19,25 +19,24 @@ def process_message(message):
 
 # Packet handler function
 def process_packet(packet):
-    global double_sniff, packet_index
+    global double_sniff, last_event_id
     if ARP in packet and packet[ARP].op == 1:  # ARP request
         # Extract extra payload data
         arppayload = bytes(packet[ARP])[28:]  # Start after standard ARP payload
-        if len(arppayload) == 0 or arppayload[0] != CHANNEL_ID:
+        if len(arppayload) < 2 or arppayload[0] != CHANNEL_ID:
             return
-        extra_data = arppayload[1:]
+        event_id = arppayload[1]
+        if last_event_id == event_id:
+            return
+        last_event_id = event_id
+        extra_data = arppayload[2:]
         if len(extra_data) > 0:
             try:
-                if double_sniff is False or packet_index % 2 == 0:
-                    process_message(extra_data)
+                process_message(extra_data)
             except:
                 pass
-            packet_index += 1
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == 'dup':
-        double_sniff = True
-        print('Double flag on')
     print("Starting packet capture on ARP...")
     while True:
         try:
