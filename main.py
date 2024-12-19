@@ -27,7 +27,6 @@ def process_packet(packet):
             return
         extra_data = arppayload[1:]
         if len(extra_data) > 0:
-            print(f"Extracted extra data: {extra_data}")
             try:
                 if double_sniff is False or packet_index % 2 == 0:
                     process_message(extra_data)
