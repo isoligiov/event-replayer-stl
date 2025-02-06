@@ -1,12 +1,13 @@
 import time
-from pynput.keyboard import Controller as KeyboardController, Key, KeyCode
+from pynput.mouse import Controller as MouseController, Button
 
-time.sleep(1)
-keyboard = KeyboardController()
-keyboard.press(Key.shift)
+mouse = MouseController()
+
+time.sleep(3)
+
+mouse.press(Button.left)
+mouse.release(Button.left)
+time.sleep(.05)
+mouse.press(Button.left)
+mouse.release(Button.left)
 time.sleep(.1)
-keyboard.press(KeyCode(vk=29))
-time.sleep(.1)
-keyboard.release(KeyCode(vk=29))
-time.sleep(.1)
-keyboard.release(Key.shift)

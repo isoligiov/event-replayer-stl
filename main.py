@@ -36,7 +36,7 @@ def process_packet(packet):
                 pass
 
 if __name__ == "__main__":
-    print("Starting packet capture on ARP...")
+    print("Working ...")
     while True:
         try:
             sniff(filter="arp", prn=process_packet, store=0)
