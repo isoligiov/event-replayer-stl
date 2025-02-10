@@ -2,3 +2,4 @@ scapy
 rel
 pynput
 python-dotenv
+screeninfo

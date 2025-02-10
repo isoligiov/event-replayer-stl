@@ -1,11 +1,15 @@
 from pynput.keyboard import Controller as KeyboardController, Key, KeyCode
 from pynput.mouse import Controller as MouseController, Button
-from AppKit import NSScreen
 from utils import two_bytes_to_signed_int, byte_to_signed_int
 
-# Getting the main screen resolution using AppKit
-screen_width = NSScreen.mainScreen().frame().size.width
-screen_height = NSScreen.mainScreen().frame().size.height
+from screeninfo import get_monitors
+
+# Getting the primary screen resolution
+monitor = get_monitors()[0]
+screen_width = monitor.width
+screen_height = monitor.height
+
+print(f"Screen Resolution (Cross-Platform): {screen_width} x {screen_height}")
 
 keyboard = KeyboardController()
 mouse = MouseController()
